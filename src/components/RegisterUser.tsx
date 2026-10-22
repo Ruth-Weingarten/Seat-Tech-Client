@@ -1,8 +1,14 @@
-import { useForm } from 'react-hook-form';
+import {  useForm } from 'react-hook-form';
 import { registerUserSchema, type RegisterUserForm } from "../schemas/Register.Schema";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { registerUser } from '../api/auth';
+import { useMutation } from '@tanstack/react-query';
 import type { AuthResponse } from '../types/auth';
-import { Axios } from 'axios';
+
+import axios from 'axios';
+import FormField from './FormField';
+import ErrorMessage from './ErrorMessage';
+import SubmitButton from './SubmitButton';
 const RegisterUser = () => {
 
     const {
@@ -21,56 +27,37 @@ const RegisterUser = () => {
 
 
 
-    // const createUser=async(newUser:RegisterUserForm):Promise<AuthResponse>=>
-    // {
-    //     const response=await Axios.post<AuthResponse>(
-    //         "http://localhost:3000/api-docs/?utm_source=chatgpt.com#/Auth/post_api_auth_register_company"
-    //     )
-    //     return response.data
-    // }
+    function onSubmit(data: RegisterUserForm) {
+        mutate(data);
+    }
 
+
+    const { mutate, isPending, error } = useMutation<AuthResponse, Error, RegisterUserForm>({
+        mutationFn: registerUser,
+        onSuccess: (response) => {
+            console.log(response.user);
+        },
+        onError: (error) => {
+
+            if (axios.isAxiosError(error)) {
+                console.log(error.response?.data);
+            }
+
+        }
+    }
+    )
     return (
         <div style={{ maxWidth: "500px", margin: "20px auto", padding: "20px", border: "1px solid #ccc" }}>
 
 
-            <form onSubmit={handleSubmit(()=>
-            {
-                
-            })}>
+            <form onSubmit={handleSubmit(onSubmit)}>
 
-                <div style={{ marginBottom: "15px" }}>
-                    <label>company join-code :</label>
-                    <input {...register("joinCode")} style={{ width: "100%", display: "block" }} />
-                    {errors.joinCode && <p style={{ color: "red" }}>{errors.joinCode.message}</p>}
-                </div>
-
-
-                <div style={{ marginBottom: "15px" }}>
-                    <label>manager name :</label>
-                    <input {...register("fullName")} style={{ width: "100%", display: "block" }} />
-                    {errors.fullName && <p style={{ color: "red" }}>{errors.fullName.message}</p>}
-                </div>
-
-
-                <div style={{ marginBottom: "15px" }}>
-
-                    <label>email :</label>
-                    <input type="email" {...register("email")} style={{ width: "100%", display: "block" }} />
-                    {errors.email && <p style={{ color: "red" }}>{errors.email.message}</p>}
-                </div>
-
-                <div style={{ marginBottom: "15px" }}>
-                    <label>password :</label>
-                    <input type='password'
-                        {...register("password")} style={{ width: "100%", display: "block" }} />
-                    {errors.password && <p style={{ color: "red" }}>{errors.password.message}</p>}
-                </div>
-
-
-
-                <button type="submit" style={{ padding: "10px 20px" }}>
-                    create account
-                </button>
+                <FormField label='join code' type='joinCode' registration={register("joinCode")} error={errors.joinCode?.message}></FormField>
+                <FormField label='manager name' type='fullName' registration={register("fullName")} error={errors.fullName?.message}></FormField>
+                <FormField label='email' type='email' registration={register("email")} error={errors.email?.message}></FormField>
+                <FormField label='password' type='password' registration={register("password")} error={errors.password?.message}></FormField>
+                <SubmitButton text='create account' submit_text='saving...' isSending={isPending}></SubmitButton>
+                <ErrorMessage message={error?.message}></ErrorMessage>
             </form>
         </div>
 

@@ -2,7 +2,13 @@
 import { useForm } from 'react-hook-form';
 import { registerCompanySchema, type RegisterCompanyForm } from "../schemas/Register.Schema";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import { registerCompany } from '../api/auth';
+import axios from 'axios';
+import type { AuthResponse } from '../types/auth';
+import { useMutation } from '@tanstack/react-query';
+import FormField from './FormField';
+import ErrorMessage from './ErrorMessage';
+import SubmitButton from './SubmitButton';
 const RegisterCompany = () => {
 
     const {
@@ -19,12 +25,25 @@ const RegisterCompany = () => {
         },
     })
 
+    function onSubmit(data: RegisterCompanyForm) {
+        mutate(data);
+    }
 
 
-    const onSubmit = (data: RegisterCompanyForm) => {
-        console.log(data);
-    };
+    const { mutate, isPending, error } = useMutation<AuthResponse, Error, RegisterCompanyForm>({
+        mutationFn: registerCompany,
+        onSuccess: (response) => {
+            console.log(response.user);
+        },
+        onError: (error) => {
 
+            if (axios.isAxiosError(error)) {
+                console.log(error.response?.data);
+            }
+
+        }
+    }
+    )
     return (
         <div style={{ maxWidth: "500px", margin: "20px auto", padding: "20px", border: "1px solid #ccc" }}>
 
@@ -32,39 +51,12 @@ const RegisterCompany = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
 
                 <h2>Create a new company</h2>
-                <div style={{ marginBottom: "15px" }}>
-                    <label>company name :</label>
-                    <input {...register("companyName")} style={{ width: "100%", display: "block" }} />
-                    {errors.companyName && <p style={{ color: "red" }}>{errors.companyName.message}</p>}
-                </div>
-
-
-                <div style={{ marginBottom: "15px" }}>
-                    <label>manager name :</label>
-                    <input {...register("fullName")} style={{ width: "100%", display: "block" }} />
-                    {errors.fullName && <p style={{ color: "red" }}>{errors.fullName.message}</p>}
-                </div>
-
-
-                <div style={{ marginBottom: "15px" }}>
-
-                    <label>email :</label>
-                    <input type="email" {...register("email")} style={{ width: "100%", display: "block" }} />
-                    {errors.email && <p style={{ color: "red" }}>{errors.email.message}</p>}
-                </div>
-
-                <div style={{ marginBottom: "15px" }}>
-                    <label>password :</label>
-                    <input type='password'
-                        {...register("password")} style={{ width: "100%", display: "block" }} />
-                    {errors.password && <p style={{ color: "red" }}>{errors.password.message}</p>}
-                </div>
-
-
-
-                <button type="submit" style={{ padding: "10px 20px" }}>
-                    create company
-                </button>
+                <FormField label='company name' type='companyName' registration={register("companyName")} error={errors.companyName?.message}></FormField>
+                <FormField label='manager name' type='fullName' registration={register("fullName")} error={errors.fullName?.message}></FormField>
+                <FormField label='email' type='email' registration={register("email")} error={errors.email?.message}></FormField>
+                <FormField label='password' type='password' registration={register("password")} error={errors.password?.message}></FormField>
+                <SubmitButton text='create company' submit_text='saving...' isSending={isPending}></SubmitButton>
+                <ErrorMessage message={error?.message}></ErrorMessage>
             </form>
         </div>
 

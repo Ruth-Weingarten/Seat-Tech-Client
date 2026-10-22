@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router";
-import App from "../App";
+
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
@@ -11,7 +11,8 @@ import AllBookingsPage from "../pages/AllBookingsPage";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
 import ErrorPage from "../pages/ErrorPage";
-import NotFounfPage from "../pages/NotFounfPage";
+import NotFoundPage from "../pages/NotFoundPage";
+import App from "../App";
 const routes = createBrowserRouter([
     {
         path: "",
@@ -56,7 +57,7 @@ const routes = createBrowserRouter([
 
             {
                 path: "*",
-                element: <NotFounfPage />
+                element: <NotFoundPage />
             }
         ]
     }

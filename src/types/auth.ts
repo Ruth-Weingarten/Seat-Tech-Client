@@ -4,4 +4,8 @@ export interface AuthResponse {
     "token": string,
     "user": User,
 }
+export interface  AuthResponseMe{
+    "user": User,
+}
+
 

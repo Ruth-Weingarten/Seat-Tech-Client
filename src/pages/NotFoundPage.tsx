@@ -1,9 +1,9 @@
-import React from 'react'
 
-const NotFounfPage = () => {
+
+const NotFoundPage = () => {
   return (
-    <div>NotFounfPage</div>
+    <div>NotFoundPage</div>
   )
 }
 
-export default NotFounfPage
+export default NotFoundPage
