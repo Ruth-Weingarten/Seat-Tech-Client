@@ -2,7 +2,7 @@
 
 const MapPage = () => {
   return (
-    <div>MapPage</div>
+    <div>Map</div>
   )
 }
 

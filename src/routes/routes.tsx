@@ -13,6 +13,7 @@ import AdminRoute from "./AdminRoute";
 import ErrorPage from "../pages/ErrorPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import App from "../App";
+import AppLayout from "../components/AppLayout";
 const routes = createBrowserRouter([
     {
         path: "",
@@ -34,8 +35,9 @@ const routes = createBrowserRouter([
 
             {
                 element: <ProtectedRoute />,
-                children: [
-                    {
+                children: [{
+                    element: <AppLayout></AppLayout>,
+                    children: [{
                         path: "map",
                         element: <MapPage />
                     },
@@ -52,7 +54,11 @@ const routes = createBrowserRouter([
                         ],
                     },
 
-                ]
+                    ]
+                }]
+
+
+
             },
 
             {

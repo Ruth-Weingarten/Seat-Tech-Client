@@ -1,13 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import {  useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import loginSchema, { type LoginForm } from '../schemas/Login.Schema';
-import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '../api/auth';
-import type { AuthResponse } from '../types/auth';
-import axios from 'axios';
 import FormField from '../components/FormField';
 import ErrorMessage from '../components/ErrorMessage';
 import SubmitButton from '../components/SubmitButton';
+import { useAuthMutation } from '../hooks/useAuthMutation/useAuthMutation';
 
 const LoginPage = () => {
 
@@ -30,20 +28,7 @@ const LoginPage = () => {
   }
 
 
-  const { mutate, isPending, error } = useMutation<AuthResponse, Error, LoginForm>({
-    mutationFn: loginUser,
-    onSuccess: (response) => {
-      console.log(response.user);
-    },
-    onError: (error) => {
-
-      if (axios.isAxiosError(error)) {
-        console.log(error.response?.data);
-      }
-
-    }
-  })
-
+  const { mutate, isPending, error } = useAuthMutation<LoginForm>(loginUser)
 
 
   return (
@@ -55,7 +40,7 @@ const LoginPage = () => {
         <FormField label='email' type='email' registration={register("email")} error={errors.email?.message}></FormField>
         <FormField label='password' type='password' registration={register("password")} error={errors.password?.message}></FormField>
         <SubmitButton text='login' submit_text='logging in...' isSending={isPending}></SubmitButton>
-        <ErrorMessage message={error?.message}></ErrorMessage>
+        <ErrorMessage error={error}></ErrorMessage>
       </form>
     </div>
 

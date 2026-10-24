@@ -3,12 +3,10 @@ import { useForm } from 'react-hook-form';
 import { registerCompanySchema, type RegisterCompanyForm } from "../schemas/Register.Schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerCompany } from '../api/auth';
-import axios from 'axios';
-import type { AuthResponse } from '../types/auth';
-import { useMutation } from '@tanstack/react-query';
 import FormField from './FormField';
 import ErrorMessage from './ErrorMessage';
 import SubmitButton from './SubmitButton';
+import { useAuthMutation } from '../hooks/useAuthMutation/useAuthMutation';
 const RegisterCompany = () => {
 
     const {
@@ -30,20 +28,8 @@ const RegisterCompany = () => {
     }
 
 
-    const { mutate, isPending, error } = useMutation<AuthResponse, Error, RegisterCompanyForm>({
-        mutationFn: registerCompany,
-        onSuccess: (response) => {
-            console.log(response.user);
-        },
-        onError: (error) => {
-
-            if (axios.isAxiosError(error)) {
-                console.log(error.response?.data);
-            }
-
-        }
-    }
-    )
+    const { mutate, isPending, error } = useAuthMutation<RegisterCompanyForm>(registerCompany)
+    
     return (
         <div style={{ maxWidth: "500px", margin: "20px auto", padding: "20px", border: "1px solid #ccc" }}>
 
@@ -56,7 +42,7 @@ const RegisterCompany = () => {
                 <FormField label='email' type='email' registration={register("email")} error={errors.email?.message}></FormField>
                 <FormField label='password' type='password' registration={register("password")} error={errors.password?.message}></FormField>
                 <SubmitButton text='create company' submit_text='saving...' isSending={isPending}></SubmitButton>
-                <ErrorMessage message={error?.message}></ErrorMessage>
+                <ErrorMessage error={error}></ErrorMessage>
             </form>
         </div>
 
