@@ -6,7 +6,7 @@ import { registerCompany } from '../api/auth';
 import FormField from './FormField';
 import ErrorMessage from './ErrorMessage';
 import SubmitButton from './SubmitButton';
-import { useAuthMutation } from '../hooks/useAuthMutation/useAuthMutation';
+import { useAuthMutation } from '../hooks/useAuthMutation';
 const RegisterCompany = () => {
 
     const {
@@ -29,7 +29,7 @@ const RegisterCompany = () => {
 
 
     const { mutate, isPending, error } = useAuthMutation<RegisterCompanyForm>(registerCompany)
-    
+
     return (
         <div style={{ maxWidth: "500px", margin: "20px auto", padding: "20px", border: "1px solid #ccc" }}>
 

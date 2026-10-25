@@ -5,7 +5,7 @@ import { loginUser } from '../api/auth';
 import FormField from '../components/FormField';
 import ErrorMessage from '../components/ErrorMessage';
 import SubmitButton from '../components/SubmitButton';
-import { useAuthMutation } from '../hooks/useAuthMutation/useAuthMutation';
+import { useAuthMutation } from '../hooks/useAuthMutation';
 
 const LoginPage = () => {
 

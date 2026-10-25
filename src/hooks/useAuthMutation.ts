@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import type { AuthResponse } from "../../types/auth";
+import type { AuthResponse } from "../types/auth";
 import axios from "axios";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 
 

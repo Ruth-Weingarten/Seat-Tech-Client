@@ -5,7 +5,7 @@ import { registerUser } from '../api/auth';
 import FormField from './FormField';
 import ErrorMessage from './ErrorMessage';
 import SubmitButton from './SubmitButton';
-import { useAuthMutation } from '../hooks/useAuthMutation/useAuthMutation';
+import { useAuthMutation } from '../hooks/useAuthMutation';
 const RegisterUser = () => {
 
     const {
