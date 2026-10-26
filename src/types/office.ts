@@ -75,7 +75,7 @@ export interface Area {
 
 export interface PermanentUser {
   id: string;
-  name: string;
+  fullName: string;
 }
 
 export interface Desk {

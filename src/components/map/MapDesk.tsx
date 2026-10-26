@@ -1,10 +1,11 @@
-import type { Desk } from "../../types/office"
+import type { DeskWithState } from "../../types/office"
+import { deskStateTicket } from "../../utils/deskState"
 
 interface MapDeskProps {
-    desk: Desk,
+    desk: DeskWithState,
     className: string,
     label?: string,
-    onClick: (desk: Desk) => void
+    onClick: (desk: DeskWithState) => void
 }
 
 const MapDesk = ({ desk, className, label, onClick }: MapDeskProps) => {
@@ -19,7 +20,9 @@ const MapDesk = ({ desk, className, label, onClick }: MapDeskProps) => {
             transform: `rotate(${desk.rotation}deg)`,
         }}
     >
-        {label ?? desk.label}
+    <span>{deskStateTicket[desk.state]}</span>
+    <span> {desk.label}</span>
+    {label && <span>{label}</span>}
     </button>
     )
 }
