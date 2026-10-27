@@ -1,2 +1,4 @@
 export const FLOORS_KEY = "floors"
 export const FLOOR_MAP_KEY = "floorMap"
+export const EMPLOYEES_KEY="employees"
+export const COMPANY_KEY = "company"

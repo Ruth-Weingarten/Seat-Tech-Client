@@ -7,5 +7,9 @@ export interface AuthResponse {
 export interface  AuthResponseMe{
     "user": User,
 }
-
-
+export interface Page<T> {
+    items: T[];      
+    total: number;   
+    page: number;   
+    pageSize: number;
+}

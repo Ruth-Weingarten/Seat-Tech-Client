@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { FLOOR_MAP_KEY } from "../api/queryKeys";
+import { FLOOR_MAP_KEY, FLOORS_KEY } from "../api/queryKeys";
 
 
 
@@ -11,6 +11,7 @@ const queryClient = useQueryClient();
         mutationFn: api,
          onSuccess: async() => {
            await queryClient.invalidateQueries({ queryKey: [FLOOR_MAP_KEY] })
+            await queryClient.invalidateQueries({ queryKey: [FLOORS_KEY] })
            onDone()
         },
         onError: (error) => {

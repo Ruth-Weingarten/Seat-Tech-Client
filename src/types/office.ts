@@ -119,3 +119,10 @@ export interface FloorMap {
   areas: Area[];
   desks: DeskWithState[];
 }
+export interface NewFloor
+{
+  "name": string,
+  "level":number,
+  "gridWidth": number,
+  "gridHeight": number
+}
