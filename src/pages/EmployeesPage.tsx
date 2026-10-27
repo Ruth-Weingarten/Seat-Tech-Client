@@ -12,6 +12,7 @@ import { useCompany } from "../hooks/useCompany"
 import { useUpdateEmployee } from "../hooks/useUpdateEmplyee"
 import type { User } from "../types/user"
 import { Link } from "react-router"
+import { SUMMERY_QUERY } from "../utils/employees"
 
 const PageSise=10
 
@@ -19,9 +20,9 @@ const EmployeesPage = () => {
 const createCode = useNewJoinCode()
 const {data:company} = useCompany()
 const updateEmployee = useUpdateEmployee()
-const { data: summary } = useEmployees({
-    status: "active", sort: "fullName", order: "asc", page: 1, pageSize: 100
-})
+const { data: summary } = useEmployees(
+SUMMERY_QUERY
+)
 const activeCount = summary?.total ?? 0
 const assignedCount = summary?.items.filter((u) => u.permanentDesk).length ?? 0
 const [notice,setNotice]=useState<string>("")
@@ -99,7 +100,7 @@ const pendingId = updateEmployee.isPending ? updateEmployee.variables?.id ?? nul
     <button type="button" onClick={()=>{handleStatus("inactive")}} >Show Inactive →</button>
 </StatCard>
 <StatCard icon="p" label="PERMANENT DESKS" value={`${assignedCount} assigned`}>
-   <Ligit add .nk to="/admin/office">Open the office →</Link>
+   <Link to="/admin/office">Open the office →</Link>
 </StatCard>
 <ErrorMessage error={createCode.error} />
         <EmployeesFilters search={search} status={status} onSearch={handleSearch} onStatus={handleStatus} />

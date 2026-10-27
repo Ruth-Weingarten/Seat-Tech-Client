@@ -16,6 +16,7 @@ const baseDeskSchema = yup.object({
     os: yup.string().oneOf(OS_VALUES, "Choose an operating system.").required("Operating system is required."),
     software: yup.array().of(yup.string().required()).default([]),
     accessibility: yup.array().of(yup.string().required()).default([]),
+    permanentUserId: yup.string().nullable().transform((v) => (v === "" ? null : v)),
 });
 
 export const createDeskSchema = baseDeskSchema;

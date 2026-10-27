@@ -8,6 +8,8 @@ import FormField from '../FormField';
 import SubmitButton from '../SubmitButton';
 import ErrorMessage from '../ErrorMessage';
 import type { Cell } from '../../utils/findFreeCell';
+import { SUMMERY_QUERY } from '../../utils/employees';
+import { useEmployees } from '../../hooks/useEmployees';
 interface FormDeskProps {
     desk?: DeskWithState,
     onClose: () => void
@@ -16,7 +18,7 @@ interface FormDeskProps {
 }
 
 
-const emptyDesk: EditDeskForm = { label: "", areaId: "", x: 0, y: 0, rotation: 0, os: "WINDOWS", software: [], accessibility: [], status: "ACTIVE", }
+const emptyDesk: EditDeskForm = { label: "", areaId: "", x: 0, y: 0, rotation: 0, os: "WINDOWS", software: [], accessibility: [], status: "ACTIVE",permanentUserId:"" }
 const FormDesk = ({ desk, onClose, area, position }: FormDeskProps) => {
     const isEdit = !!desk
     const {
@@ -35,12 +37,14 @@ const FormDesk = ({ desk, onClose, area, position }: FormDeskProps) => {
             , os: desk.os,
             software: desk.software,
             accessibility: desk.accessibility
-            , status: desk.status
+            , status: desk.status,
+            permanentUserId: desk.permanentUser?.id ?? ""
         } : { ...emptyDesk, areaId: area?.id ?? "", x: position?.x ?? 0, y: position?.y ?? 0 },
     })
     const create = useMapMutation(createDesk, onClose)
     const update = useMapMutation(updateDesk, onClose)
     const remove = useMapMutation(deleteDesk, onClose)
+    const { data: activeEmployees } = useEmployees(SUMMERY_QUERY)
     function onSubmit(data: EditDeskForm) {
         if (desk) {
 
@@ -57,6 +61,9 @@ const FormDesk = ({ desk, onClose, area, position }: FormDeskProps) => {
                    remove.mutate(desk.id)
                }
     }
+    const assignable = activeEmployees?.items.filter(
+    (e) => !e.permanentDesk || e.permanentDesk.id === desk?.id
+) ?? []
     return (
         <div style={{ maxWidth: "500px", margin: "20px auto", padding: "20px", border: "1px solid #ccc" }}>
 
@@ -90,14 +97,22 @@ const FormDesk = ({ desk, onClose, area, position }: FormDeskProps) => {
                     </label>
                 ))}
 
-                {isEdit && (
-                    <>
-                        <label>Status</label>
-                        <select {...register("status")}>
-                            {DESK_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                        </select>
-                    </>
-                )}
+              {isEdit && (
+    <>
+        <label>Status</label>
+        <select {...register("status")}>
+            {DESK_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+
+        <label>Permanent employee</label>
+        <select {...register("permanentUserId")}>
+            <option value="">— None —</option>
+            {assignable.map((e) => (
+                <option key={e.id} value={e.id}>{e.fullName}</option>
+            ))}
+        </select>
+    </>
+)}
                 <SubmitButton text={isEdit ? "Save" : "Create desk"} submit_text="Saving..." isSending={create.isPending || update.isPending} />
                 <ErrorMessage error={create.error ?? update.error??remove.error} />
                 {isEdit&&<button type="button" onClick={handleDelete}>delete desk</button>}
