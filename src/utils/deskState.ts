@@ -1,11 +1,11 @@
 import type { DeskState } from "../types/office";
 
- export const deskStateTicket: Record<DeskState, string> = {
-    AVAILABLE: "Available",
-    BOOKED: "Booked",
-    MINE: "Your desk",
-    PERMANENT: "Permanent desk",
-    RESTRICTED: "Restricted",
-    MAINTENANCE: "Maintenance",
-    PERMANENT_MINE: "Your permanent desk",
+export const deskStateClasses: Record<DeskState, string> = {
+  AVAILABLE: "free",
+  BOOKED: "taken",
+  MINE: "mine",
+  PERMANENT: "taken",
+  RESTRICTED: "restricted",
+  MAINTENANCE: "maintenance",
+  PERMANENT_MINE: "mine"
 }

@@ -4,7 +4,7 @@ import { FLOOR_MAP_KEY } from "../api/queryKeys";
 
 
 
-export const useBookingsMutation = <T>(api: (data: T) => Promise<void>,onDone:()=>void) => {
+export const useMapMutation = <T>(api: (data: T) => Promise<void>,onDone:()=>void) => {
 const queryClient = useQueryClient();
 
     return useMutation<void, Error, T>({

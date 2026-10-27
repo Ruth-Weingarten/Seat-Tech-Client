@@ -1,8 +1,8 @@
 import { bookDesk, cancelBooking, replaceBooking } from "../../api/booking";
-import { useBookingsMutation } from "../../hooks/useBookingsMutation";
-import type {  DeskWithState, MyBooking } from "../../types/office";
-import { deskStateTicket } from "../../utils/deskState";
+import type { DeskWithState, MyBooking } from "../../types/office";
 import ErrorMessage from "../ErrorMessage";
+import { useMapMutation } from "../../hooks/useMapMutation";
+import { deskStateTicket } from "../../utils/deskStateTicket";
 
 interface DeskDialogProps {
     desk: DeskWithState;
@@ -18,15 +18,15 @@ const getDeskTicket = (desk: DeskWithState) => {
 type DeskAction = "book" | "switch" | "cancel" | null
 
 const DeskDialog = ({ desk, myBooking, bookingDate, onClose, hasPermanentDesk }: DeskDialogProps) => {
-    const book = useBookingsMutation(bookDesk, onClose)
-    const replace = useBookingsMutation(replaceBooking, onClose)
-    const cancel = useBookingsMutation(cancelBooking, onClose)
+    const book = useMapMutation(bookDesk, onClose)
+    const replace = useMapMutation(replaceBooking, onClose)
+    const cancel = useMapMutation(cancelBooking, onClose)
     const action: DeskAction = desk.state === "MINE" ? "cancel" : desk.canBook ? myBooking ? "switch" : "book" : null;
     const message =
-  desk.state === "BOOKED" ? `Booked by ${desk.bookedByName}` :
-  desk.state === "PERMANENT" ? `Permanent desk of ${desk.permanentUser?.fullName}` :
-  desk.state === "AVAILABLE" && hasPermanentDesk ? "You have a permanent desk, no need to book" :
-  null
+        desk.state === "BOOKED" ? `Booked by ${desk.bookedByName}` :
+            desk.state === "PERMANENT" ? `Permanent desk of ${desk.permanentUser?.fullName}` :
+                desk.state === "AVAILABLE" && hasPermanentDesk ? "You have a permanent desk, no need to book" :
+                    null
     const handleAction = () => {
         if (action === "book") {
             book.mutate(desk.id)
