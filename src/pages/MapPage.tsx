@@ -48,7 +48,7 @@ const MapPage = () => {
       <FloorSelector floors={floors} selectedId={currentId} onSelected={setSelectedId}></FloorSelector>
       {floorsMap && <p>Booking for {floorsMap.bookingDate}</p>}
       {floorsMap && <MapFloor floor={floorsMap.floor} areas={floorsMap.areas} desks={floorsMap.desks}
-        onDeskClick={onDeskClick} getDeskClassName={getDeskClassName} getDeskLabel={getDeskLabel}
+        onDeskClick={onDeskClick} getDeskClassName={getDeskClassName} getDeskLabel={getDeskLabel} showState={true}
       ></MapFloor>}
       {selectedDesk && floorsMap && <DeskDialog
         desk={selectedDesk} myBooking={floorsMap.myBooking} bookingDate={floorsMap.bookingDate} onClose={() => { setSelectedDesk(null) }} hasPermanentDesk={floorsMap.hasPermanentDesk}></DeskDialog>}

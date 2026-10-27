@@ -38,6 +38,11 @@ const DeskDialog = ({ desk, myBooking, bookingDate, onClose, hasPermanentDesk }:
             replace.mutate({ bookingId: myBooking.id, deskId: desk.id })
         }
     }
+    const actionLabels: Record<"book" | "switch" | "cancel", string> = {
+    book: "Book this desk",
+    switch: "Switch to this desk",
+    cancel: "Cancel booking",
+}
 
     return (
         <div>
@@ -49,7 +54,7 @@ const DeskDialog = ({ desk, myBooking, bookingDate, onClose, hasPermanentDesk }:
             <div>{desk.os}</div>
             <div>softWare :{desk.software.length === 0 ? <div>none</div> : desk.software.map((s) => (<div key={s}>{s}</div>))}</div>
             <div>accessibility: {desk.accessibility.length === 0 ? <div>none</div> : desk.accessibility.map((s) => <div key={s}>{s}</div>)}</div>
-            {action && <button disabled={book.isPending || cancel.isPending || replace.isPending} type="button" onClick={() => { handleAction() }}>{action}</button>}
+            {action && <button disabled={book.isPending || cancel.isPending || replace.isPending} type="button" onClick={() => { handleAction() }}>{actionLabels[action]}</button>}
             {message && <p>{message}</p>}
             <ErrorMessage error={book.error ?? cancel.error ?? replace.error} />
         </div>
