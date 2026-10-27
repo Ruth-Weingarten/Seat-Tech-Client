@@ -11,6 +11,7 @@ import StatCard from "../components/employees/StatCard"
 import { useCompany } from "../hooks/useCompany"
 import { useUpdateEmployee } from "../hooks/useUpdateEmplyee"
 import type { User } from "../types/user"
+import { Link } from "react-router"
 
 const PageSise=10
 
@@ -18,6 +19,11 @@ const EmployeesPage = () => {
 const createCode = useNewJoinCode()
 const {data:company} = useCompany()
 const updateEmployee = useUpdateEmployee()
+const { data: summary } = useEmployees({
+    status: "active", sort: "fullName", order: "asc", page: 1, pageSize: 100
+})
+const activeCount = summary?.total ?? 0
+const assignedCount = summary?.items.filter((u) => u.permanentDesk).length ?? 0
 const [notice,setNotice]=useState<string>("")
 const [search, setSearch] = useState("")
 const [status, setStatus] = useState<EmployeeStatus>("active")
@@ -86,8 +92,14 @@ const pendingId = updateEmployee.isPending ? updateEmployee.variables?.id ?? nul
       <>
         {isLoading && <Loading text="Loading employees..." />}
         <ErrorMessage error={error} />
-        <StatCard icon="j" label="Join code" value={company?.joinCode ?? "—"}>
+        <StatCard icon="j" label="JOIN CODE" value={company?.joinCode ?? "—"}>
     <button type="button" onClick={handleNewCode} disabled={createCode.isPending}>New code →</button>
+</StatCard>
+<StatCard icon="a" label="ACTIVE" value={`${activeCount} ${activeCount === 1 ? "employee" : "employees"}`}>
+    <button type="button" onClick={()=>{handleStatus("inactive")}} >Show Inactive →</button>
+</StatCard>
+<StatCard icon="p" label="PERMANENT DESKS" value={`${assignedCount} assigned`}>
+   <Ligit add .nk to="/admin/office">Open the office →</Link>
 </StatCard>
 <ErrorMessage error={createCode.error} />
         <EmployeesFilters search={search} status={status} onSearch={handleSearch} onStatus={handleStatus} />
