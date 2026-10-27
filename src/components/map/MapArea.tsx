@@ -6,18 +6,20 @@ interface MapAreaProps {
     onAddDesk?: (area: Area) => void
 }
 
-const MapArea = ({ area, onClick,onAddDesk}: MapAreaProps) => {
+const MapArea = ({ area, onClick, onAddDesk }: MapAreaProps) => {
     return (
         <div
-       
-            onClick={() => onClick?.(area)}
             style={{
                 gridColumn: `${area.x + 1} / span ${area.width}`,
                 gridRow: `${area.y + 1} / span ${area.height}`,
             }}
-        > 
-        {onAddDesk &&area.isWorkspace &&<button type="button" onClick={()=>onAddDesk(area)}>+</button>}
-            {area.name}
+        >
+            {onClick
+                ? <button type="button" title="Edit area" onClick={() => onClick(area)}>{area.name}</button>
+                : <span>{area.name}</span>}
+
+            {onAddDesk && area.isWorkspace &&
+                <button type="button" title="Add desk" onClick={() => onAddDesk(area)}>+</button>}
         </div>
     )
 }

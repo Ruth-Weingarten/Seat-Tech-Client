@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { editDeskSchema, type CreateDeskForm, type EditDeskForm } from '../../schemas/Desk.Schema';
 import type { Area, DeskWithState } from '../../types/office';
 import { useMapMutation } from '../../hooks/useMapMutation';
-import { ACCESSIBILITY_VALUES, createDesk, DESK_STATUSES, OS_VALUES, ROTATIONS, SOFTWARE_VALUES, updateDesk } from '../../api/office';
+import { ACCESSIBILITY_VALUES, createDesk, deleteDesk, DESK_STATUSES, OS_VALUES, ROTATIONS, SOFTWARE_VALUES, updateDesk } from '../../api/office';
 import FormField from '../FormField';
 import SubmitButton from '../SubmitButton';
 import ErrorMessage from '../ErrorMessage';
@@ -12,15 +12,16 @@ interface FormDeskProps {
     desk?: DeskWithState,
     onClose: () => void
     area?: Area
-    position?:Cell
+    position?: Cell
 }
 
 
 const emptyDesk: EditDeskForm = { label: "", areaId: "", x: 0, y: 0, rotation: 0, os: "WINDOWS", software: [], accessibility: [], status: "ACTIVE", }
-const FormDesk = ({ desk, onClose,area , position}: FormDeskProps) => {
+const FormDesk = ({ desk, onClose, area, position }: FormDeskProps) => {
     const isEdit = !!desk
     const {
         register,
+        reset,
         handleSubmit,
         formState: { errors },
     } = useForm({
@@ -39,13 +40,22 @@ const FormDesk = ({ desk, onClose,area , position}: FormDeskProps) => {
     })
     const create = useMapMutation(createDesk, onClose)
     const update = useMapMutation(updateDesk, onClose)
+    const remove = useMapMutation(deleteDesk, onClose)
     function onSubmit(data: EditDeskForm) {
         if (desk) {
-            update.mutate({ id: desk.id, data })
+
+                update.mutate({ id: desk.id, data })
+            
         }
         else {
             create.mutate(data)
         }
+    }
+    function handleDelete()
+    {
+        if (desk&&window.confirm(`Delete desk ${desk.label}?`)) {
+                   remove.mutate(desk.id)
+               }
     }
     return (
         <div style={{ maxWidth: "500px", margin: "20px auto", padding: "20px", border: "1px solid #ccc" }}>
@@ -53,9 +63,9 @@ const FormDesk = ({ desk, onClose,area , position}: FormDeskProps) => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormField label="Desk name" registration={register("label")} error={errors.label?.message}></FormField>
-                
+
                 <p >
-                   Area : {area?.name}
+                    Area : {area?.name}
                 </p>
                 {errors.areaId && <p>{errors.areaId.message}</p>}
                 <label>Rotation</label>
@@ -89,7 +99,9 @@ const FormDesk = ({ desk, onClose,area , position}: FormDeskProps) => {
                     </>
                 )}
                 <SubmitButton text={isEdit ? "Save" : "Create desk"} submit_text="Saving..." isSending={create.isPending || update.isPending} />
-                <ErrorMessage error={create.error ?? update.error} />
+                <ErrorMessage error={create.error ?? update.error??remove.error} />
+                {isEdit&&<button type="button" onClick={handleDelete}>delete desk</button>}
+                 {isEdit&&<button type="button" onClick={()=>{reset()}}>reset</button>}
                 <button type="button" onClick={onClose}>Cancel</button>
             </form>
         </div>

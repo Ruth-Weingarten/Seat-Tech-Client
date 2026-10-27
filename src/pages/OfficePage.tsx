@@ -7,10 +7,13 @@ import FloorSelector from "../components/map/FloorSelector";
 import MapFloor from "../components/map/MapFloor";
 import FormDesk from "../components/map/FormDesk";
 import { findFreeCell, type Cell } from "../utils/findFreeCell";
+import FormArea from "../components/map/FormArea";
 
 type Editing =
   | { type: "desk"; desk: DeskWithState }
   | { type: "newDesk" ,area:Area,position:Cell}
+  | { type: "area"; area: Area }
+  | { type: "newArea" }
   | null
 const OfficePage = () => {
   const [editing, setEditing] = useState<Editing>(null);
@@ -30,6 +33,9 @@ const OfficePage = () => {
       setEditing({ type: "newDesk",area:area,position:position });
     }
   }
+  const onAreaClick = (area: Area) => {
+    setEditing({ type: "area", area })
+}
   if (isLoading) {
     return (<Loading text="Loading floors..."></Loading>)
   }
@@ -43,9 +49,9 @@ const OfficePage = () => {
   return (
     <>
       <FloorSelector floors={floors} selectedId={currentId} onSelected={setSelectedId}></FloorSelector>
-
+<button type="button" title="Add area" onClick={() => setEditing({ type: "newArea" })}>+</button>
       {floorsMap && <MapFloor floor={floorsMap.floor} areas={floorsMap.areas} desks={floorsMap.desks}
-        onDeskClick={onDeskClick} getDeskClassName={() => ""} showState={false} onAddDesk={onAddDesk}
+        onDeskClick={onDeskClick} getDeskClassName={() => ""} showState={false} onAddDesk={onAddDesk} onAreaClick={onAreaClick}
       ></MapFloor>}
       {editing?.type === "desk" && floorsMap && (
         <FormDesk
@@ -61,6 +67,24 @@ const OfficePage = () => {
           position={editing.position}
           area={editing.area}
         ></FormDesk>
+      )}
+          {editing?.type === "area" && floorsMap && (
+        <FormArea
+          key={editing.area.id}
+          floor={floorsMap.floor}
+          areas={floorsMap.areas}
+          onClose={() => setEditing(null)}
+          area={editing.area}
+        ></FormArea>
+      )}
+      {editing?.type === "newArea" && floorsMap && (
+        <FormArea
+          key="newArea"
+          onClose={() => setEditing(null)}
+          floor={floorsMap.floor}
+          areas={floorsMap.areas}
+          
+        ></FormArea>
       )}
     </>
   )

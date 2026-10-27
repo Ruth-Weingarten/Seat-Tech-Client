@@ -10,10 +10,11 @@ interface FloorMapProps {
     getDeskClassName: (desk: DeskWithState) => string
     getDeskLabel?: (desk: DeskWithState) => string|undefined
     onAddDesk?: (area: Area) => void
-    showState?: boolean
+    showState?: boolean,
+    onAreaClick?: (area: Area) => void
 }
 const CELL_SIZE = 48;
-const MapFloor = ({ floor, areas, desks, onDeskClick, getDeskClassName, getDeskLabel,onAddDesk,showState }: FloorMapProps) => {
+const MapFloor = ({ floor, areas, desks, onDeskClick, getDeskClassName, getDeskLabel,onAddDesk,showState,onAreaClick }: FloorMapProps) => {
     return (
         <div
             style={{
@@ -23,7 +24,7 @@ const MapFloor = ({ floor, areas, desks, onDeskClick, getDeskClassName, getDeskL
             }}
         >
             {areas.map((area) => (
-                <MapArea key={area.id} area={area} onAddDesk={onAddDesk} />
+                <MapArea key={area.id} area={area} onAddDesk={onAddDesk} onClick={onAreaClick}  />
             ))}
 
             {desks.map((desk) => (
