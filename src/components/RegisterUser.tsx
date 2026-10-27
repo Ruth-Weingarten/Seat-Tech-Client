@@ -31,17 +31,19 @@ const RegisterUser = () => {
 
     const { mutate, isPending, error } = useAuthMutation<RegisterUserForm>(registerUser)
     return (
-        <div style={{ maxWidth: "500px", margin: "20px auto", padding: "20px", border: "1px solid #ccc" }}>
+        <div>
 
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
 
                 <FormField label='join code' type='joinCode' registration={register("joinCode")} error={errors.joinCode?.message}></FormField>
-                <FormField label='manager name' type='fullName' registration={register("fullName")} error={errors.fullName?.message}></FormField>
+                <FormField label='full name' type='fullName' registration={register("fullName")} error={errors.fullName?.message}></FormField>
                 <FormField label='email' type='email' registration={register("email")} error={errors.email?.message}></FormField>
                 <FormField label='password' type='password' registration={register("password")} error={errors.password?.message}></FormField>
-                <SubmitButton text='create account' submit_text='saving...' isSending={isPending}></SubmitButton>
                 <ErrorMessage error={error}></ErrorMessage>
+                <div className="flex">
+                <SubmitButton text='Join company' submit_text='Saving...' isSending={isPending}></SubmitButton>
+                </div>
             </form>
         </div>
 

@@ -1,6 +1,6 @@
 import type { CreateAreaForm } from "../schemas/Area.Schema"
 import type { CreateDeskForm, EditDeskForm } from "../schemas/Desk.Schema"
-import type { Area, Floor, FloorMap, NewFloor } from "../types/office"
+import type { Floor, FloorMap, LayoutChange, NewFloor } from "../types/office"
 import { api } from "./client"
 
 export const getFloors = async (): Promise<Floor[]> => {
@@ -37,6 +37,9 @@ export const createFloor= async ( data : NewFloor): Promise<void> => {
 }
 export const deleteFloor = async (id: string): Promise<void> => {
     await api.delete(`/api/floors/${id}`)
+}
+export const saveLayout = async ({ floorId, layout }: { floorId: string, layout: LayoutChange }): Promise<void> => {
+    await api.put(`/api/floors/${floorId}/layout`, layout)
 }
 export const OS_VALUES = ["WINDOWS", "MACOS", "LINUX"] as const;
 export const ROTATIONS = [0, 90, 180, 270] as const;

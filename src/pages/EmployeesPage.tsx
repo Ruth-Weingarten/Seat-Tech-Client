@@ -13,13 +13,19 @@ import { useUpdateEmployee } from "../hooks/useUpdateEmplyee"
 import type { User } from "../types/user"
 import { Link } from "react-router"
 import { SUMMERY_QUERY } from "../utils/employees"
+import { Armchair, KeyRound, Users } from "lucide-react"
+import PageHero from "../components/PageHero"
+import { useConfirm } from "../hooks/useConfirm"
 
 const PageSise=10
+const cardIcon = "size-8 text-[#ffd6e6]"
+const cardAction = "font-bold text-brand hover:text-brand-dark no-underline cursor-pointer disabled:opacity-50"
 
 const EmployeesPage = () => {
 const createCode = useNewJoinCode()
 const {data:company} = useCompany()
 const updateEmployee = useUpdateEmployee()
+const { confirm, dialog } = useConfirm()
 const { data: summary } = useEmployees(
 SUMMERY_QUERY
 )
@@ -63,15 +69,15 @@ setOrder("asc")
   }
  setPage(1)
 }
-function handleNewCode()
+async function handleNewCode()
 {
-  if (window.confirm("Create a new join code? The current code will stop working.")) {
+  if (await confirm({ title: "Create a new join code?", message: "The current code will stop working. Employees who haven't registered yet will need the new one.", confirmText: "Create new code" })) {
         createCode.mutate()
     }
 }
-function handleToggleActive(employee: User) {
+async function handleToggleActive(employee: User) {
     if (employee.isActive &&
-        !window.confirm(`Deactivate ${employee.fullName}? Their upcoming bookings will be cancelled and their permanent desk released.`)) {
+        !(await confirm({ title: `Deactivate ${employee.fullName}?`, message: "Their upcoming bookings will be cancelled and their permanent desk released.", confirmText: "Deactivate", danger: true }))) {
         return
     }
     setNotice("")
@@ -91,25 +97,35 @@ function handleToggleActive(employee: User) {
 const pendingId = updateEmployee.isPending ? updateEmployee.variables?.id ?? null : null
   return (
       <>
+      {dialog}
+      <PageHero headline="Your people." tagline="All in one place.">Invite, find and manage everyone in {company?.name ?? "your company"}.</PageHero>
+      <main className="relative mx-auto max-w-[1200px] -mt-[84px] px-4 sm:px-10 pb-14 flex flex-col gap-8">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-7">
+        <StatCard icon={<KeyRound className={cardIcon} strokeWidth={1.5} aria-hidden="true" />} label="Join code" value={company?.joinCode ?? "—"}>
+    <button type="button" onClick={handleNewCode} disabled={createCode.isPending} className={cardAction}>New code →</button>
+</StatCard>
+<StatCard icon={<Users className={cardIcon} strokeWidth={1.5} aria-hidden="true" />} label="Active" value={`${activeCount} ${activeCount === 1 ? "employee" : "employees"}`}>
+    <button type="button" onClick={()=>{handleStatus("inactive")}} className={cardAction}>Show inactive →</button>
+</StatCard>
+<StatCard icon={<Armchair className={cardIcon} strokeWidth={1.5} aria-hidden="true" />} label="Permanent desks" value={`${assignedCount} assigned`}>
+   <Link to="/admin/office" className={cardAction}>Open the office →</Link>
+</StatCard>
+        </div>
+<ErrorMessage error={createCode.error} />
+        <section className="bg-white border border-line">
+        <EmployeesFilters search={search} status={status} onSearch={handleSearch} onStatus={handleStatus} />
+        <div className="px-7 empty:hidden flex flex-col gap-3 pt-4">
         {isLoading && <Loading text="Loading employees..." />}
         <ErrorMessage error={error} />
-        <StatCard icon="j" label="JOIN CODE" value={company?.joinCode ?? "—"}>
-    <button type="button" onClick={handleNewCode} disabled={createCode.isPending}>New code →</button>
-</StatCard>
-<StatCard icon="a" label="ACTIVE" value={`${activeCount} ${activeCount === 1 ? "employee" : "employees"}`}>
-    <button type="button" onClick={()=>{handleStatus("inactive")}} >Show Inactive →</button>
-</StatCard>
-<StatCard icon="p" label="PERMANENT DESKS" value={`${assignedCount} assigned`}>
-   <Link to="/admin/office">Open the office →</Link>
-</StatCard>
-<ErrorMessage error={createCode.error} />
-        <EmployeesFilters search={search} status={status} onSearch={handleSearch} onStatus={handleStatus} />
-        {data && <>
-   {notice && <p>{notice}</p>}
+   {notice && <p role="status" className="text-sm text-[#1f7a4d] bg-[#e6f5ec] px-3.5 py-2.5 rounded-lg">{notice}</p>}
 <ErrorMessage error={updateEmployee.error} />
+        </div>
+        {data && <>
     <EmployeesTabel employees={data.items} sort={sort} order={order} onSort={handleSort} onToggleActive={handleToggleActive } pendingId={pendingId}/>
     <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onPage={setPage} />
 </>}
+        </section>
+      </main>
 </>
   )
 }

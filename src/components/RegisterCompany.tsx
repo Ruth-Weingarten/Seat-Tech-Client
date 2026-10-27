@@ -31,22 +31,22 @@ const RegisterCompany = () => {
     const { mutate, isPending, error } = useAuthMutation<RegisterCompanyForm>(registerCompany)
 
     return (
-        <div style={{ maxWidth: "500px", margin: "20px auto", padding: "20px", border: "1px solid #ccc" }}>
+        <div>
 
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
 
-                <h2>Create a new company</h2>
                 <FormField label='company name' type='companyName' registration={register("companyName")} error={errors.companyName?.message}></FormField>
                 <FormField label='manager name' type='fullName' registration={register("fullName")} error={errors.fullName?.message}></FormField>
                 <FormField label='email' type='email' registration={register("email")} error={errors.email?.message}></FormField>
                 <FormField label='password' type='password' registration={register("password")} error={errors.password?.message}></FormField>
-                <SubmitButton text='create company' submit_text='saving...' isSending={isPending}></SubmitButton>
                 <ErrorMessage error={error}></ErrorMessage>
+                <div className="flex">
+                <SubmitButton text='Create company' submit_text='Saving...' isSending={isPending}></SubmitButton>
+                </div>
             </form>
         </div>
 
     )
 }
 export default RegisterCompany
-

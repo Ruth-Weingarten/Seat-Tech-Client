@@ -126,3 +126,9 @@ export interface NewFloor
   "gridWidth": number,
   "gridHeight": number
 }
+
+// Body of PUT /api/floors/{id}/layout: new positions after a drag
+export interface LayoutChange {
+  areas: { id: string; x: number; y: number; width: number; height: number }[];
+  desks: { id: string; x: number; y: number }[];
+}
