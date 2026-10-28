@@ -7,7 +7,6 @@ import MapPage from "../pages/MapPage";
 import MyBookingPage from "../pages/MyBookingPage";
 import OfficePage from "../pages/OfficePage";
 import EmployeesPage from "../pages/EmployeesPage";
-import AllBookingsPage from "../pages/AllBookingsPage";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
 import ErrorPage from "../pages/ErrorPage";
@@ -50,7 +49,6 @@ const routes = createBrowserRouter([
                         children: [
                             { path: "admin/office", element: <OfficePage /> },
                             { path: "admin/employees", element: <EmployeesPage /> },
-                            { path: "admin/bookings", element: <AllBookingsPage /> },
                         ],
                     },
 

@@ -5,12 +5,12 @@ import './index.css'
 import { RouterProvider } from 'react-router'
 import routes from './routes/routes.tsx'
 import AuthProvider from './context/AuthContext.tsx'
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools"
+
 const queryClient = new QueryClient()
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools />
+     
       <AuthProvider>
         <RouterProvider router={routes} />
       </AuthProvider>

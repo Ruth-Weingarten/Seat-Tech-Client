@@ -32,7 +32,6 @@ const Header = () => {
             {user?.role === 'ADMIN' && <>
                 <NavLink to='/admin/office' className={navClass}>Office</NavLink>
                 <NavLink to="/admin/employees" className={navClass}>Employees</NavLink>
-                <NavLink to='/admin/bookings' className={navClass}>All bookings</NavLink>
             </>}
         </nav>
         <div className="flex-1"></div>
